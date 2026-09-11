@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Pre-commit hook: scans staged changes for secrets using GitLeaks (via Docker).
+# Blocks the commit if any secrets are found.
+
+echo "Running GitLeaks secret scan..."
+
+docker run --rm -v "$(pwd)":/repo zricethezav/gitleaks:latest \
+  protect --source=/repo --config=/repo/.gitleaks.toml --staged -v
+
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+  echo ""
+  echo "❌ GitLeaks detected potential secrets in your staged changes."
+  echo "   Commit blocked. Review the findings above before committing."
+  echo "   If this is a false positive, add it to .gitleaks.toml's allowlist."
+  exit 1
+fi
+
+echo "✅ No secrets detected. Proceeding with commit."
+exit 0

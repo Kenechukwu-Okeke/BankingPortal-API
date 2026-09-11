@@ -1,0 +1,10 @@
+title = "BankingPortal-API GitLeaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore known expired example JWTs in Postman collection"
+paths = [
+  '''Banking Portal\.postman_collection\.json'''
+]
